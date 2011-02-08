@@ -19,6 +19,8 @@
 #include <time.h>
 #include <ctype.h>
 
+#include "ObjectMarker.h"
+
 // Create memory for calculations
 static CvMemStorage* storage = 0;
 
@@ -26,8 +28,10 @@ static CvMemStorage* storage = 0;
 static CvHaarClassifierCascade* cascade = 0;
 
 // Function prototypes
+int evaluate();
 void detect_and_draw();
 void CopySubImage(IplImage *imageSource, IplImage *imageDest, int xorigin, int yorigin, int width, int height);
+void SaveImageToDisk(bool bSubjectIsBlinking);
 
 // Create a string that contains the cascade name
 //const char* CASCADE_FILE = "Cascade Files/haarcascade_frontalface_alt.xml";
@@ -50,7 +54,16 @@ IplImage	*frame,
 // Main function, defines the entry point for the program.
 int main( int argc, char** argv )
 {
-    // Structure for getting video from camera or avi
+    object_marker("Images/Blinking/", "Images/output.txt");
+	
+	//evaluate();
+
+
+}
+
+int evaluate()
+{
+	// Structure for getting video from camera or avi
     CvCapture* capture = 0;
 
     // Load the HaarClassifierCascade
@@ -150,8 +163,20 @@ int main( int argc, char** argv )
 			cvShowImage( "eyes_bin", frame_eyes_bin );
 
             // Wait for a while before proceeding to the next frame
-            if( cvWaitKey( 10 ) >= 0 )
+			int key = cvWaitKey( 10 );
+
+            if( key == 13 ) // Enter
+			{
+				SaveImageToDisk(true);
+			}
+			else if (key == 32) // Spacebar
+			{
+				SaveImageToDisk(false);
+			}
+			else if(key >= 0)
+			{
                 break;
+			}
         }
 
         // Release the images, and capture memory
@@ -171,7 +196,7 @@ int main( int argc, char** argv )
 	cvDestroyWindow("eyes_smooth");
 	cvDestroyWindow("eyes_bin");
 
-    // return 0 to indicate successfull execution of the program
+	// return 0 to indicate successfull execution of the program
     return 0;
 }
 
@@ -258,4 +283,27 @@ void CopySubImage(IplImage *imageSource, IplImage *imageDest, int xorigin, int y
 	
 	cvResetImageROI(imageSource);
 	cvResetImageROI(imageDest);
+}
+
+void SaveImageToDisk(bool bSubjectIsBlinking)
+{
+	time_t rawtime;
+	struct tm timeinfo;
+	char img_path[40];
+
+	char* path = bSubjectIsBlinking ? "Images/Blinking/" : "Images/Not Blinking/";
+
+	time ( &rawtime );
+	localtime_s(&timeinfo, &rawtime );
+	sprintf_s(img_path, "%s%04d%02d%02d%02d%02d%02d.png",
+			path,
+			timeinfo.tm_year + 1900, 
+			timeinfo.tm_mon + 1, 
+			timeinfo.tm_mday,
+			timeinfo.tm_hour, 
+			timeinfo.tm_min, 
+			timeinfo.tm_sec
+			);
+	
+	cvSaveImage(img_path, frame_copy);
 }
