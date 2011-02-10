@@ -1,0 +1,1 @@
+"c:\Program Files\OpenCV-2.1.0\build\bin\Debug\opencv_haartrainingd.exe" -data "c:\Projects\Blink Detection\src\Blink Detection\Blink Detection\Images\TrainingData" -vec "c:\Projects\Blink Detection\src\Blink Detection\Blink Detection\Images\create_samples.vec" -bg "c:\Projects\Blink Detection\src\Blink Detection\Blink Detection\Images\bg.txt" -w 20 -h 20 -npos 5000 -mem 2000
