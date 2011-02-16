@@ -34,8 +34,9 @@ void CopySubImage(IplImage *imageSource, IplImage *imageDest, int xorigin, int y
 void SaveImageToDisk(bool bSubjectIsBlinking);
 
 // Create a string that contains the cascade name
-//const char* CASCADE_FILE = "Cascade Files/haarcascade_frontalface_alt.xml";
-const char* CASCADE_FILE  = "Cascade Files/haarcascade_mcs_eyepair_big.xml";
+const char* CASCADE_FILE = "Cascade Files/haarcascade_frontalface_alt.xml";
+//const char* CASCADE_FILE  = "Cascade Files/haarcascade_mcs_eyepair_big.xml";
+//const char* CASCADE_FILE  = "Images/TrainingData.xml";
 
 DWORD tickCountPrev = 0;
 int frames = 0;
@@ -54,9 +55,9 @@ IplImage	*frame,
 // Main function, defines the entry point for the program.
 int main( int argc, char** argv )
 {
-    object_marker("Images/Blinking/", "Images/output.txt");
+    //object_marker("Images/Blinking/", "Images/output.txt");
 	
-	//evaluate();
+	evaluate();
 
 
 }
@@ -128,7 +129,7 @@ int evaluate()
                 cvFlip( frame, frame_copy, 0 );
             
             // Call the function to detect and draw the face
-            //detect_and_draw();
+            detect_and_draw();
 
 			frames++;
 			DWORD tickCount = GetTickCount();
@@ -226,7 +227,7 @@ void detect_and_draw()
         // Detect the objects and store them in the sequence
         CvSeq* faces = cvHaarDetectObjects( frame_copy, cascade, storage,
                                             1.1, 2, CV_HAAR_DO_CANNY_PRUNING,
-                                            cvSize(50, 50) );
+                                            cvSize(200, 200) );
 
         // Loop the number of faces found.
         //for( i = 0; i < (faces ? faces->total : 0); i++ )
@@ -244,7 +245,7 @@ void detect_and_draw()
 
 			cvCvtColor(frame_eyes_diff, frame_eyes_gray, CV_RGB2GRAY);
 			cvSmooth(frame_eyes_gray, frame_eyes_smooth);
-			cvThreshold(frame_eyes_smooth, frame_eyes_bin, 64, 255, CV_THRESH_BINARY);
+			cvThreshold(frame_eyes_smooth, frame_eyes_bin, 16, 255, CV_THRESH_BINARY);
 
 			//imgDifference = cvSum(frame_eyes_diff);
 
@@ -255,7 +256,7 @@ void detect_and_draw()
             pt2.y = (r->y+r->height)*scale;
 
             // Draw the rectangle in the input image
-            cvRectangle( frame_copy, pt1, pt2, CV_RGB(255,0,0), 3, 8, 0 );
+            //cvRectangle( frame_copy, pt1, pt2, CV_RGB(255,0,0), 3, 8, 0 );
 			
 			/*cvSetImageROI(img, *r);
 			avgIntensity = cvAvg(img);
