@@ -128,8 +128,10 @@ int evaluate()
             else
                 cvFlip( frame, frame_copy, 0 );
             
+			DWORD tickCountBefore = GetTickCount();
             // Call the function to detect and draw the face
             detect_and_draw();
+			DWORD tickCountAfter = GetTickCount();
 
 			frames++;
 			DWORD tickCount = GetTickCount();
@@ -256,7 +258,7 @@ void detect_and_draw()
             pt2.y = (r->y+r->height)*scale;
 
             // Draw the rectangle in the input image
-            //cvRectangle( frame_copy, pt1, pt2, CV_RGB(255,0,0), 3, 8, 0 );
+            cvRectangle( frame_copy, pt1, pt2, CV_RGB(255,0,0), 3, 8, 0 );
 			
 			/*cvSetImageROI(img, *r);
 			avgIntensity = cvAvg(img);
