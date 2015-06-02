@@ -1,0 +1,1 @@
+Blink detection algorithm written in C++ utilizing the OpenCV library.
